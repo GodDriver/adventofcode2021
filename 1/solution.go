@@ -1,4 +1,4 @@
-package solution
+package main
 
 import (
     "bufio"
@@ -49,10 +49,19 @@ func GetSums(nums []int, num_count int) []int {
 
 func main() {
 
-    file, file_err := os.Open("input")
+    var fileName string
+
+    if len(os.Args) == 2 {
+        fileName = os.Args[1]
+    } else {
+        fileName = "input"
+    }
+
+    file, file_err := os.Open(fileName)
     if file_err != nil {
         log.Fatalf("failed to open input file")
     }
+    defer file.Close()
 
     scanner := bufio.NewScanner(file)
     scanner.Split(bufio.ScanLines)
@@ -62,12 +71,10 @@ func main() {
     for scanner.Scan() {
         depth, parseint_err := strconv.Atoi(scanner.Text())
         if parseint_err != nil {
-            log.Fatalf("not integers")
+            log.Fatalf("not integer")
         }
         depths = append(depths, depth)
     }
-
-    file.Close()
 
     fmt.Printf("%d measurements are larger than the previous measurement\n",
                GetNumOfIncreases(depths))
